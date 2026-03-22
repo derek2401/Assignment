@@ -82,7 +82,7 @@ def delete_one(product_id : int = Query(..., gt = 0)):  # Must be greater than 0
     deleted_product = collection.delete_one({"ProductID" : product_id})  # Find product and delete it
     
     # Check if the deleted product count went up
-    if deleted_product == 0:
+    if deleted_product.deleted_count == 0:
         raise HTTPException(status_code = 404, detail = "ProductID does not exist")  # If the count didnt increase
     
     # Show the user the product deleted
