@@ -83,7 +83,7 @@ def delete_one(product_id : int = Query(..., gt = 0)):  # Must be greater than 0
     
     # Check if the deleted product count went up
     if deleted_product == 0:
-        raise HTTPException(status_code = 400, detail = "ProductID does not exist")  # If the count didnt increase
+        raise HTTPException(status_code = 404, detail = "ProductID does not exist")  # If the count didnt increase
     
     # Show the user the product deleted
     return{
@@ -161,7 +161,7 @@ def convert(product_id : int = Query(..., gt = 0)):
     try:
         # Calling frankfurter API for current conversion rates for USD to Ero
         hear_back = requests.get(
-            "https://api.frankfurter.dev/v1/1999-01-04?base=USD&symbols=EUR",  # API
+            "https://api.frankfurter.dev/v1/latest?base=USD&symbols=EUR",  # API
             timeout = 30  # Timeout time in seconds
         )
         
