@@ -1,0 +1,915 @@
+{
+  "info": {
+    "_postman_id": "ae9f4632-8814-4793-8ff2-a1792e98e76c",
+    "name": "WebServices",
+    "description": "### Welcome to Postman! This is your first collection. \n\nCollections are your starting point for building and testing APIs. You can use this one to:\n\n• Group related requests\n• Test your API in real-world scenarios\n• Document and share your requests\n\nUpdate the name and overview whenever you’re ready to make it yours.\n\n[Learn more about Postman Collections.](https://learning.postman.com/docs/collections/collections-overview/)",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "53349131",
+    "_collection_link": "https://go.postman.co/collection/53349131-ae9f4632-8814-4793-8ff2-a1792e98e76c?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Success - getSingleProduct",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Convert response body to JSON",
+              "const responseJSON = pm.response.json();",
+              "",
+              "// Check if request was successful",
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Make sure it returns a product id",
+              "pm.test(\"Return ProductID\", function () {",
+              "    pm.expect(responseJSON).to.have.property(\"ProductID\");",
+              "});",
+              "",
+              "// Check if returned product id matches the one searched for",
+              "pm.test(\"Returned ProductID matches the searched one\", function () {",
+              "    pm.expect(responseJSON.ProductID).to.equal(1005);",
+              "});",
+              "",
+              "// Check that request returns all expected fields",
+              "pm.test(\"Response contains all expected fields\", function () {",
+              "    pm.expect(responseJSON).to.have.all.keys(\"ProductID\", \"Name\", \"UnitPrice\", \"StockQuantity\", \"Description\");",
+              "});",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/getSingleProduct?product_id=1005",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "getSingleProduct"
+          ],
+          "query": [
+            {
+              "key": "product_id",
+              "value": "1005",
+              "description": "Check for valid search"
+            }
+          ]
+        },
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+      },
+      "response": []
+    },
+    {
+      "name": "Fail - getSingleProduct",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Convert response body to JSON",
+              "const responseJSON = pm.response.json();",
+              "",
+              "// Check if response shows 404 for product not found",
+              "pm.test(\"Status code is 404\", function () {",
+              "    pm.response.to.have.status(404);",
+              "    });",
+              "",
+              "// Check that response body contains details",
+              "pm.test(\"Response body contains details\", function () {",
+              "    pm.expect(responseJSON).to.have.property(\"detail\")",
+              "    });",
+              "",
+              "// Check that response contains the correct error message",
+              "pm.test(\"Response body contains correct error message\", function () {",
+              "    pm.expect(responseJSON.detail).to.equal(\"Product was not found\");",
+              "    });",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/getSingleProduct?product_id=199999",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "getSingleProduct"
+          ],
+          "query": [
+            {
+              "key": "product_id",
+              "value": "199999",
+              "description": "Check for invalid search"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Success - getAll",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Convert response body to JSON",
+              "const responseJSON = pm.response.json();",
+              "",
+              "// Check if request was successful",
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "    });",
+              "",
+              "// Check if response includes count",
+              "pm.test(\"Response has count\", function () {",
+              "    pm.expect(responseJSON).to.have.property(\"count\");",
+              "    });",
+              "",
+              "// Check that products has the list of products",
+              "pm.test(\"Products array has a list of products\", function () {",
+              "    pm.expect(responseJSON).to.have.property(\"products\");",
+              "    pm.expect(responseJSON.products).to.be.an(\"array\");",
+              "    });",
+              "",
+              "// Check that the count matches the current number of products in the array",
+              "pm.test(\"Count matches the number of products\", function () {",
+              "    pm.expect(responseJSON.count).to.equal(responseJSON.products.length);",
+              "    });"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/getAll",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "getAll"
+          ]
+        },
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+      },
+      "response": []
+    },
+    {
+      "name": "Fail - getAll",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Convert response body to JSON",
+              "const responseJSON = pm.response.json();",
+              "",
+              "// Check if request was successful",
+              "pm.test(\"Status code is 404\", function () {",
+              "    pm.response.to.have.status(404);",
+              "});",
+              "",
+              "// Check that response body contains details",
+              "pm.test(\"Response body contains details\", function () {",
+              "    pm.expect(responseJSON).to.have.property(\"detail\")",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/getAll1",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "getAll1"
+          ]
+        },
+        "description": "This is a GET request and it is used to \"get\" data from an endpoint. There is no request body for a GET request, but you can use query parameters to help specify the resource you want data on (e.g., in this request, we have `id=1`).\n\nA successful GET response will have a `200 OK` status, and should include some kind of response body - for example, HTML web content or JSON data."
+      },
+      "response": []
+    },
+    {
+      "name": "Success - addNew",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Convert response body to JSON",
+              "const responseJSON = pm.response.json();",
+              "",
+              "// Check if request was successful",
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "    });",
+              "",
+              "// Check if response contains the expected message",
+              "pm.test(\"Response contains the expected error message\", function () {",
+              "    pm.expect(responseJSON).to.have.property(\"message\");",
+              "    });",
+              "",
+              "// Check if response contains the product",
+              "pm.test(\"Response contains the product\", function () {",
+              "    pm.expect(responseJSON).to.have.property(\"product\");",
+              "    });",
+              "",
+              "// Check that productID matches what user sent",
+              "pm.test(\"Product ID matches\", function () {",
+              "    pm.expect(responseJSON.product.ProductID).to.equal(7777777);",
+              "    });",
+              "",
+              "// Check that new product has all fields",
+              "pm.test(\"Product has all fields\", function () {",
+              "    pm.expect(responseJSON.product).to.have.property(\"Name\");",
+              "    pm.expect(responseJSON.product).to.have.property(\"UnitPrice\");",
+              "    pm.expect(responseJSON.product).to.have.property(\"StockQuantity\");",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"ProductID\" : 7777777,\n    \"Name\" : \"Testing Product\",\n    \"UnitPrice\" : 75.25,\n    \"StockQuantity\" : 43,\n    \"Description\" : \"Product added for testing purposes\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/addNew",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "addNew"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Fail - addNew",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Convert response body to JSON",
+              "const responseJSON = pm.response.json();",
+              "",
+              "// Check if request was successful",
+              "pm.test(\"Status code is 400\", function () {",
+              "    pm.response.to.have.status(400);",
+              "    });",
+              "",
+              "// Check if response contains the details",
+              "pm.test(\"Response contains details\", function () {",
+              "    pm.expect(responseJSON).to.have.property(\"detail\");",
+              "    });"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"ProductID\" : 1005, // Already in use\n    \"Name\" : \"Testing Product\",\n    \"UnitPrice\" : 75.25,\n    \"StockQuantity\" : 43,\n    \"Description\" : \"Product added for testing purposes\"\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/addNew",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "addNew"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Success - deleteOne",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Convert response body to JSON",
+              "const responseJSON = pm.response.json();",
+              "",
+              "// Check if request was successful",
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "    });",
+              "",
+              "// Check if response contains the expected message",
+              "pm.test(\"Response contains message\", function () {",
+              "    pm.expect(responseJSON).to.have.property(\"message\");",
+              "    });",
+              "",
+              "// Check that the product was deleted",
+              "pm.test(\"Product was deleted\", function () {",
+              "    pm.expect(responseJSON.message.toLowerCase()).to.include(\"deleted\");",
+              "    });"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/deleteOne?product_id=7777777",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "deleteOne"
+          ],
+          "query": [
+            {
+              "key": "product_id",
+              "value": "7777777",
+              "type": "text"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Fail - deleteOne",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Convert response body to JSON",
+              "const responseJSON = pm.response.json();",
+              "",
+              "// Check if request was successful",
+              "pm.test(\"Status code is 404\", function () {",
+              "    pm.response.to.have.status(404);",
+              "    });",
+              "",
+              "// Check if response contains detail",
+              "pm.test(\"Response contains detail\", function () {",
+              "    pm.expect(responseJSON).to.have.property(\"detail\");",
+              "    });",
+              "",
+              "// Check that the product does not exist",
+              "pm.test(\"Product does not exist\", function () {",
+              "    pm.expect(responseJSON.detail.toLowerCase()).to.include(\"does not\");",
+              "    });"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "{{base_url}}/deleteOne?product_id=7777777",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "deleteOne"
+          ],
+          "query": [
+            {
+              "key": "product_id",
+              "value": "7777777"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Success - startsWith",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Convert response body to JSON",
+              "const responseJSON = pm.response.json();",
+              "",
+              "// Check if request was successful",
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Check if response contains count",
+              "pm.test(\"Response contains count\", function () {",
+              "    pm.expect(responseJSON).to.have.property(\"count\");",
+              "});",
+              "",
+              "// Check if response contains the array",
+              "pm.test(\"Response contains array\", function () {",
+              "    pm.expect(responseJSON).to.have.property(\"products\");",
+              "    pm.expect(responseJSON.products).to.be.an(\"array\");",
+              "});",
+              "",
+              "// Check if the returned products start with the correct letters",
+              "pm.test(\"Products start with correct letters\", function () {",
+              "    const letters = \"asu\";",
+              "",
+              "    responseJSON.products.forEach(product => {",
+              "        pm.expect(product.Name.toLowerCase().startsWith(letters)).to.be,true;",
+              "    });",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{base_url}}/startsWith?letters=asu",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "startsWith"
+          ],
+          "query": [
+            {
+              "key": "letters",
+              "value": "asu"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Fail - startsWith",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Convert response body to JSON",
+              "const responseJSON = pm.response.json();",
+              "",
+              "// Check if request was successful",
+              "pm.test(\"Status code is 400\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "// Check if response contains detail",
+              "pm.test(\"Response contains detail\", function () {",
+              "    pm.expect(responseJSON).to.have.property(\"detail\");",
+              "});",
+              "",
+              "// Check if the error message is as expected",
+              "pm.test(\"Error searching array\", function () {",
+              "    pm.expect(responseJSON.detail.toLowerCase()).to.include(\"letters\");",
+              "});",
+              "",
+              ""
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "protocolProfileBehavior": {
+        "disableBodyPruning": true
+      },
+      "request": {
+        "method": "GET",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": ""
+        },
+        "url": {
+          "raw": "{{base_url}}/startsWith?letters=123",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "startsWith"
+          ],
+          "query": [
+            {
+              "key": "letters",
+              "value": "123"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Success - paginate",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Convert response body to JSON",
+              "const responseJSON = pm.response.json();",
+              "",
+              "// Check if request was successful",
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Check if response contains products",
+              "pm.test(\"Response contains product array\", function () {",
+              "    pm.expect(responseJSON).to.have.property(\"products\");",
+              "    pm.expect(responseJSON.products).to.be.an(\"array\");",
+              "});",
+              "",
+              "// Check if it only returns 10 products max",
+              "pm.test(\"Response contains 10 products max\", function () {",
+              "    pm.expect(responseJSON.products.length).to.be.at.most(10);",
+              "});",
+              "",
+              "// Check each product is within the set range",
+              "pm.test(\"All products are within the specified range\", function () {",
+              "    const startingId = parseInt(pm.request.url.query.get(\"starting_id\"));",
+              "    const endingId = parseInt(pm.request.url.query.get(\"ending_id\"));",
+              "    ",
+              "    responseJSON.products.forEach(product => {",
+              "        pm.expect(product.ProductID).to.be.at.least(startingId);",
+              "        pm.expect(product.ProductID).to.be.at.most(endingId);",
+              "    });",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/paginate?starting_id=1001&ending_id=1147",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "paginate"
+          ],
+          "query": [
+            {
+              "key": "starting_id",
+              "value": "1001"
+            },
+            {
+              "key": "ending_id",
+              "value": "1147"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Fail 1 - paginate",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Convert response body to JSON",
+              "const responseJSON = pm.response.json();",
+              "",
+              "// Check if request was successful",
+              "pm.test(\"Status code is 400\", function () {",
+              "    pm.response.to.have.status(400);",
+              "});",
+              "",
+              "// Check if response contains detail",
+              "pm.test(\"Response contains detail\", function () {",
+              "    pm.expect(responseJSON).to.have.property(\"detail\");",
+              "});",
+              "",
+              "// Check if error message is  for invalid range",
+              "pm.test(\"Error is 'Invalid range'\", function () {",
+              "    pm.expect(responseJSON.detail.toLowerCase()).to.include(\"greater\");",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/paginate?starting_id=1150&ending_id=1001",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "paginate"
+          ],
+          "query": [
+            {
+              "key": "starting_id",
+              "value": "1150"
+            },
+            {
+              "key": "ending_id",
+              "value": "1001"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Fail 2 - paginate",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Convert response body to JSON",
+              "const responseJSON = pm.response.json();",
+              "",
+              "// Check if request was successful",
+              "pm.test(\"Status code is 404\", function () {",
+              "    pm.response.to.have.status(404);",
+              "});",
+              "",
+              "// Check if response contains detail",
+              "pm.test(\"Response contains detail\", function () {",
+              "    pm.expect(responseJSON).to.have.property(\"detail\");",
+              "});",
+              "",
+              "// Check if error message is  for invalid range",
+              "pm.test(\"Error is 'Invalid range'\", function () {",
+              "    pm.expect(responseJSON.detail.toLowerCase()).to.include(\"no products\");",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/paginate?starting_id=2000&ending_id=3000",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "paginate"
+          ],
+          "query": [
+            {
+              "key": "starting_id",
+              "value": "2000"
+            },
+            {
+              "key": "ending_id",
+              "value": "3000"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Success - convert",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Convert response body to JSON",
+              "const responseJSON = pm.response.json();",
+              "",
+              "// Check if request was successful",
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "",
+              "// Check if the response contains the expected data",
+              "// Check for productID",
+              "pm.test(\"Response contains productID\", function () {",
+              "    pm.expect(responseJSON).to.have.property('ProductID');",
+              "    });",
+              "// Check for productName",
+              "pm.test(\"Response contains productName\", function () {",
+              "    pm.expect(responseJSON).to.have.property('Name');",
+              "});",
+              "// Check for USD price",
+              "pm.test(\"Response contains USD price\", function () {",
+              "    pm.expect(responseJSON).to.have.property('USDPrice');",
+              "    pm.expect(responseJSON.USDPrice).to.be.a('number');",
+              "});",
+              "// Check for EUR rate",
+              "pm.test(\"Response contains EUR rate\", function () {",
+              "    pm.expect(responseJSON).to.have.property('EURRate');",
+              "    pm.expect(responseJSON.EURRate).to.be.a('number');",
+              "});",
+              "// Check for price converted to EUR",
+              "pm.test(\"Response contains converted price in EUR\", function () {",
+              "    pm.expect(responseJSON).to.have.property('EURConverted');",
+              "    pm.expect(responseJSON.EURConverted).to.be.a('number');",
+              "});",
+              "",
+              "// Check if the productID matches the one chosen",
+              "pm.test(\"Product ID matches the chosen one\", function () {",
+              "    pm.expect(responseJSON.ProductID).to.equal(1005);",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/convert?product_id=1005",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "convert"
+          ],
+          "query": [
+            {
+              "key": "product_id",
+              "value": "1005",
+              "type": "text"
+            }
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Fail - convert",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "exec": [
+              "// Convert response body to JSON",
+              "const responseJSON = pm.response.json();",
+              "",
+              "// Check if request was successful",
+              "pm.test(\"Status code is 404\", function () {",
+              "    pm.response.to.have.status(404);",
+              "});",
+              "",
+              "// Check the response contains detail",
+              "pm.test(\"Response contains detail\", function () {",
+              "    pm.expect(responseJSON).to.have.property('detail');",
+              "});",
+              "",
+              "// Check if the error message is correct",
+              "pm.test(\"Error message is correct\", function () {",
+              "    pm.expect(responseJSON.detail.toLowerCase()).to.include('not found');",
+              "});"
+            ],
+            "type": "text/javascript",
+            "packages": {},
+            "requests": {}
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "{{base_url}}/convert?product_id=4040404",
+          "host": [
+            "{{base_url}}"
+          ],
+          "path": [
+            "convert"
+          ],
+          "query": [
+            {
+              "key": "product_id",
+              "value": "4040404"
+            }
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "",
+      "type": "default"
+    }
+  ]
+}
