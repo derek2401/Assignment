@@ -28,7 +28,7 @@ class Product(BaseModel):
 # Home Page
 @app.get("/")
 def homePage():
-    return {"message" : "API Wworking"}
+    return {"message" : "API Working"}
 
 
 # Find one single product
