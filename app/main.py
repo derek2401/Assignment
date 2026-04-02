@@ -6,15 +6,14 @@ import requests  # Converting prices
 
 MONGO_URI = "mongodb+srv://b00120626:webservca@cluster0.len2ad4.mongodb.net/?appName=Cluster0"
 
-DB_NAME = "productsdb"
-COLLECTION_NAME = "products"
+DB_NAME = "productsdb"  # Database name
+COLLECTION_NAME = "products"  # Collection name
 
-app = FastAPI()
+app = FastAPI()  # Use Fast API
 
-client = MongoClient(MONGO_URI)
-    
-db = client[DB_NAME]
-collection = db[COLLECTION_NAME]
+client = MongoClient(MONGO_URI)  # Connect to MongoDB
+db = client[DB_NAME]  # Choose DB
+collection = db[COLLECTION_NAME]  # Choose COLLECTION
 
 # Create the container for a product for POST methods
 class Product(BaseModel):
@@ -130,9 +129,9 @@ def paginate(starting_id : int = Query(..., gt = 0), ending_id : int = Query(...
     # Find all products in the entered product ID range
     products = list(collection.find(
         # Show products greater/egual to starting ID and less/equal to ending ID
-        {"ProductID" : {"$gte" : starting_id, "$lte" : ending_id}},  # Mongo will find nearest IDs to the entered ones
+        {"ProductID" : {"$gte" : starting_id, "$lte" : ending_id}},  # Find products within range
         {"_id" : 0}
-    ).sort("ProductID", 1).limit(10))  # Sort all of them in decending orderr and only show a batch of 10
+    ).sort("ProductID", 1).limit(10))  # Sort all of them in order and only show a batch of 10
     
     # If no products are found in the entered product ID range
     if not products:
@@ -144,7 +143,7 @@ def paginate(starting_id : int = Query(..., gt = 0), ending_id : int = Query(...
     }
 
 
-# Convert the price of a chosen product
+# Convert the price of a chosen product from USD to EUR
 @app.get("/convert")
 def convert(product_id : int = Query(..., gt = 0)):
     
@@ -157,7 +156,7 @@ def convert(product_id : int = Query(..., gt = 0)):
     # If it cant be found, give error message
     if not product:
         raise HTTPException(status_code = 404, detail = "Product was not found")
-    
+    # Try get current exchange rate from frankfurter API
     try:
         # Calling frankfurter API for current conversion rates for USD to Ero
         hear_back = requests.get(
